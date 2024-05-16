@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<% include ./partials/header.ejs %>
+<body class="bg-black text-white">
+    <header>
+
+        <div class="container">
+    
+            <div class="profile">
+    
+                <div class="profile-image">
+                    <div style="background-image: url('/images/uploads/<%= user.profileimg %>'); background-size: cover; height: 70px; width: 70px; border-radius: 50%; border: 2px solid black;"></div>
+                </div>                
+    
+                <div class="profile-user-settings">
+    
+                    <h1 class="profile-user-name"><%= user.username %></h1>
+                    <form class=" text-xl font-semibold border-2  cursor-pointer flex items-center justify-center "  action="/follow/<%=user._id%>" method="post">
+                        <% if (loginUser.following.includes(user._id)) { %>
+                              <button class="p-5" type="submit">Unfollow</button>
+                          <% } else { %>
+                              <button type="submit">Follow</button>
+                          <% } %>
+                        </form>
+                
+                </div>
+    
+                <div class="profile-stats border-2 border-white">
+    
+                    <ul>
+                        <li><span class="profile-stat-count"><%= user.post.length %></span> posts</li>
+                        <li><span class="profile-stat-count"><%= user.followers.length %></span> followers</li>
+                        <li><span class="profile-stat-count"><%= user.following.length %></span> following</li>
+                    </ul>
+    
+                </div>
+    
+                <div class="profile-bio">
+    
+                    <p><span class="profile-real-name"><%= user.name %></span> <%= user.bio %></p>
+    
+                </div>
+    
+            </div>
+            <!-- End of profile section -->
+    
+        </div>
+        <!-- End of container -->
+    
+    </header>
+    <br><br>
+    
+    <main>
+    
+        <div class="container">
+    
+            <div class="posts mb-20">
+                <% user.post.forEach(function(elem) { %>
+                  <div class="post mt-10 w-full min-h-[50vh]">
+                    <div class="title px-4 flex items-center gap-2">
+                      <div class="w-[8vw] h-[8vw] bg-sky-100 rounded-full" style="background-image: url('/images/uploads/<%= user.profileimg %>'); background-size: cover;" ></div>
+                      <h4 class="text-sm"><%=user.username %></h4>
+                      <h6 class="text-xs opacity-30">1d</h6>
+                    </div>
+                    <div class="w-full h-96 mt-4 bg-sky-100" style="background-image: url('/images/uploads/<%= elem.image %>'); background-repeat: no-repeat; background-size: cover;"></div>
+                    <div class="options w-full px-4 flex justify-between items-center text-[1.4rem]">
+                      <div class="flex gap-3 mt-2">
+                        <form action="/like/<%=elem._id%>" method="post">
+                            <button type="submit"><i class="ri-heart-3-line"></i></i>
+                          </form>
+                        <i class="ri-chat-3-line"></i>
+                        <i class="ri-share-circle-line"></i>
+                      </div>
+                      <i class="ri-bookmark-line"></i>
+                    </div>
+                    <form action="/like/<%=elem._id%>" method="post">
+                        <h3 class="px-4 mt-2 text-sm leading-none tracking-tight"><%= elem.like.length %>
+                          <% if (elem.like.includes(loginUser._id)) { %>
+                            <button class="text-white" type="submit">Dislike</button>
+                          <% } else { %>
+                            <button class="text-red-500 text-sm font-semibold" type="submit">Like</button>
+                          <% } %>
+                      </form>
+                    <h2 class=" font-light text-xl mt-2 px-3"><%= elem.caption %>
+                    </h2>
+                  </div>
+                  <% }); %>
+                </div>
+           
+    
+        </div>
+      
+    
+    </main>
+    <% include ./partials/footer.ejs %>
+
+</body>
+</html>
